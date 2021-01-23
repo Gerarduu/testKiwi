@@ -21,8 +21,31 @@ enum APIRouter {
     var queryItems: [URLQueryItem] {
         switch self {
         case .flights:
-            let lat = Preferences.getPrefsLatitude() ?? kDummyLat
-            let lon = Preferences.getPrefsLongitude() ?? kDummyLon
+            var lat: String = ""
+            var lon: String = ""
+            
+            if let latTemp = Preferences.getPrefsLatitude(), let lonTemp = Preferences.getPrefsLongitude() {
+                lat = latTemp
+                lon = lonTemp
+            } else {
+                if let curLanguage = Bundle.main.preferredLocalizations.first {
+                    switch curLanguage {
+                    case "es":
+                        lat = kEsLat
+                        lon = kEsLon
+                    case "ca":
+                        lat = kCatLat
+                        lon = kCatLon
+                    default:
+                        lat = kJapLat
+                        lon = kJapLon
+                    }
+                } else {
+                    lat = kCatLat
+                    lon = kCatLon
+                }
+            }
+            
             let parameters = [
                 URLQueryItem(name: kLocale, value: "en"),
                 URLQueryItem(name: kV, value: "3"),
