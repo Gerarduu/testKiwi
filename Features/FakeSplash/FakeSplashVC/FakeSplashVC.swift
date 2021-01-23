@@ -14,9 +14,6 @@ class FakeSplashVC: BaseVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        FlightCacheManager.shared.start()
-        
         setup()
         loadData()
     }

@@ -32,58 +32,51 @@ class LoadHomeDataFlowHelper {
     
     private func cacheFlights(finish: @escaping () -> Void) {
         
-        let oldFlights = FlightCacheManager.shared.getCachedFlights()
-        var newFlights = [Flight]()
-        
-        for flight in oldFlights {
-            print("oldFlightId: \(flight.id)")
-        }
-
-        if self.flights.count <= 0 {
-            delegate?.error(AppError.generic)
-            return
-        }
-        
-        if oldFlights.count<=0 {
-            for (i,flight) in self.flights.enumerated() {
-                if i == kMaxFlights {
-                    break
-                }
-                newFlights.append(flight)
-            }
-        } else {
-            self.flightsTemp = self.flights.filter { flight in
-                !oldFlights.contains(where: {$0.id == flight.id}
-            )}
+        DispatchQueue.main.async {
+            let oldFlights = FlightCacheManager.shared.getCachedFlights()
+            var newFlights = [Flight]()
             
-            for n in 0..<self.flightsTemp.count {
-                if n == kMaxFlights {
-                    break
-                }
-                newFlights.append(self.flightsTemp[Int(randomIndex())])
+            if self.flights.count <= 0 {
+                self.delegate?.error(AppError.generic)
+                return
             }
-        }
-        print("-----------------------------------------------------------------")
-        clearOldCache {
-            for flight in newFlights {
-                print("newFlightId: \(flight.id)")
-                FlightCacheManager.shared.saveFlightId(flight: flight)
-                for oldFlight in oldFlights {
-                    if flight.id == oldFlight.id {
-                        print("Duplicate detected!!!!!!!!!!!!")
+            
+            if oldFlights.count<=0 {
+                for (i,flight) in self.flights.enumerated() {
+                    if i == kMaxFlights {
+                        break
                     }
+                    newFlights.append(flight)
+                }
+            } else {
+                self.flightsTemp = self.flights.filter { flight in
+                    !oldFlights.contains(where: {$0.id == flight.id}
+                )}
+                
+                for _ in 0..<kMaxFlights {
+                    newFlights.append(self.flightsTemp[Int(self.randomIndex())])
                 }
             }
-            finish()
+            
+            self.clearOldCache {
+                for flight in newFlights {
+                    FlightCacheManager.shared.saveFlightId(flight: flight)
+                }
+                DispatchQueue.main.async {
+                    finish()
+                }
+            }
         }
     }
     
     private func clearOldCache(finish: @escaping () -> Void) {
-        let oldFlights = FlightCacheManager.shared.getCachedFlights()
-        for oldFlight in oldFlights {
-            FlightCacheManager.shared.deleteFlight(flight: oldFlight)
+        DispatchQueue.main.async {
+            let oldFlights = FlightCacheManager.shared.getCachedFlights()
+            for oldFlight in oldFlights {
+                FlightCacheManager.shared.deleteFlight(flight: oldFlight)
+            }
+            finish()
         }
-        finish()
     }
     
     private func sortedById(_ flights: [Flight]) -> [Flight] {
@@ -101,22 +94,20 @@ class LoadHomeDataFlowHelper {
         if let hasAlreadyLaunched = Preferences.getPrefsHasAlreadyLaunched() {
             if hasAlreadyLaunched {
                 if let date = Preferences.getPrefsAppFirstLaunchedTime() {
-                    if let diff = Calendar.current.dateComponents([.second], from: date, to: Date()).second, diff > 15 {
-                        debugPrint("LoadingFromAPIADayPassed")
+                    if let diff = Calendar.current.dateComponents([.second], from: date, to: Date()).second, diff > 1 {
                         loadData()
                     } else {
-                        self.cachedFlights = FlightCacheManager.shared.getCachedFlights()
-                        if self.cachedFlights.count > 0 {
-                            debugPrint("LoadingFromCache")
-                            delegate?.didLoadData(sortedById(self.cachedFlights))
-                        } else {
-                            debugPrint("LoadedFromCacheButNoFlightsCallingAPI")
-                            loadData()
+                        DispatchQueue.main.async {
+                            self.cachedFlights = FlightCacheManager.shared.getCachedFlights()
+                            if self.cachedFlights.count > 0 {
+                                self.delegate?.didLoadData(self.sortedById(self.cachedFlights))
+                            } else {
+                                self.loadData()
+                            }
                         }
                     }
                 }
             } else {
-                debugPrint("LoadingFromAPIFirstTime")
                 Preferences.setPrefsHasAlreadyLaunched(value: true)
                 loadData()
             }
@@ -137,9 +128,11 @@ class LoadHomeDataFlowHelper {
                 }
                 self.flights = data
                 self.cacheFlights {
-                    self.cachedFlights = FlightCacheManager.shared.getCachedFlights()
-                    self.delegate?.didLoadData(self.sortedById(self.cachedFlights))
-                    Preferences.setPrefsAppFirstLaunchedTime(value: Date())
+                    DispatchQueue.main.async {
+                        self.cachedFlights = FlightCacheManager.shared.getCachedFlights()
+                        self.delegate?.didLoadData(self.sortedById(self.cachedFlights))
+                        Preferences.setPrefsAppFirstLaunchedTime(value: Date())
+                    }
                 }
                 break
             }

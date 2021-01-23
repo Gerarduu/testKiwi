@@ -19,18 +19,25 @@ class FlightCacheManager {
     
     @objc
     func start() {
+        
         if let delegate = (UIApplication.shared.delegate as? AppDelegate) {
-            managedContext = delegate.persistentContainer.viewContext
-            persistentContainer = delegate.persistentContainer
-            flightEntity = NSEntityDescription.entity(forEntityName: kFlightEntity, in: managedContext!)
+            self.managedContext = delegate.persistentContainer.viewContext
+            self.persistentContainer = delegate.persistentContainer
+            self.flightEntity = NSEntityDescription.entity(forEntityName: kFlightEntity, in: self.managedContext!)
         }
     }
     
     func saveFlightId(flight: Flight) {
         
-        guard let flightEntity = flightEntity else {return}
+        if Thread.isMainThread{
+            print("saveFlightInMain")
+        } else {
+            print("saveFlightInBG")
+        }
         
-        let flightEn = NSManagedObject(entity: flightEntity, insertInto: managedContext)
+        guard let flightEntity = self.flightEntity else {return}
+        
+        let flightEn = NSManagedObject(entity: flightEntity, insertInto: self.managedContext)
         flightEn.setValue(flight.id, forKey: kFlightId)
         flightEn.setValue(flight.dTime, forKey: kFlightDtime)
         flightEn.setValue(flight.aTime, forKey: kFlightATime)
@@ -42,16 +49,20 @@ class FlightCacheManager {
         flightEn.setValue(flight.mapIdto, forKey: kFlightMapIdto)
         flightEn.setValue(flight.deepLink, forKey: kFlightDeepLink)
         
-        persistentContainer?.performBackgroundTask { (context) in
-            do {
-                try context.save()
-            } catch let error as NSError {
-                print("Could not save file. \(error), \(error.userInfo)")
-            }
+        do {
+            try managedContext?.save()
+        } catch let error as NSError {
+            print("Could not save file. \(error), \(error.userInfo)")
         }
     }
     
     func getCachedFlights() -> [Flight] {
+        
+        if Thread.isMainThread{
+            print("getInMain")
+        } else {
+            print("getInBG")
+        }
         
         var flights = [Flight]()
         
@@ -87,6 +98,13 @@ class FlightCacheManager {
     }
     
     func deleteFlight(flight: Flight) {
+        
+        if Thread.isMainThread{
+            print("DelInMain")
+        } else {
+            print("DelInBG")
+        }
+        
         do {
             guard let id = flight.id else {
                 print("malformedId")
@@ -103,9 +121,8 @@ class FlightCacheManager {
             
             try managedContext?.save()
             
-            
         } catch let error as NSError {
-            print("Could not delete comic. \(error), \(error.userInfo)")
+            print("Could not delete file. \(error), \(error.userInfo)")
         }
     }
 }

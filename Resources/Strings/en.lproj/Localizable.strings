@@ -20,3 +20,4 @@
 
 "error.generic" = "Something went wrong...";
 "error.retry" = "Retry";
+"error.ok" = "OK";
