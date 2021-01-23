@@ -9,3 +9,5 @@ import Foundation
 
 let kPrefsLatitude = "latitude"
 let kPrefsLongitude = "longitude"
+let kPrefsHasAlreadyLaunched = "hasAlreadyLaunched"
+let kPrefsAppFirstLaunchedTime = "appFirstLaunchedTime"

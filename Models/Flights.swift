@@ -13,6 +13,7 @@ struct FlightsRoot: Codable {
  
 struct Flight: Codable {
     
+    var id: String?
     var dTime: Int?
     var aTime: Int?
     var flyDuration: String?
@@ -24,6 +25,7 @@ struct Flight: Codable {
     var deepLink: URL?
     
     enum CodingKeys: String, CodingKey {
+        case id = "id"
         case dTime = "dTime"
         case aTime = "aTime"
         case flyDuration = "fly_duration"

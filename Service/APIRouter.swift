@@ -30,12 +30,12 @@ enum APIRouter {
                 URLQueryItem(name: kFlyFrom, value: "\(lat)-\(lon)-250km"),
                 URLQueryItem(name: kTo, value: "anywhere"),
                 URLQueryItem(name: kFeatureName, value: "aggregateResults"),
-                URLQueryItem(name: kDateFrom, value: "06/03/2020"),
-                URLQueryItem(name: kDateTo, value: "06/04/2021"),
+                URLQueryItem(name: kDateFrom, value: "01/01/2020"),
+                URLQueryItem(name: kDateTo, value: "01/12/2021"),
                 URLQueryItem(name: kTypeFlight, value: "oneway"),
                 URLQueryItem(name: kOneForCity, value: "1"),
                 URLQueryItem(name: kAdults, value: "1"),
-                URLQueryItem(name: kLimit, value: "5"),
+                URLQueryItem(name: kLimit, value: "200"),
                 URLQueryItem(name: kPartner, value: "picky")
             ]
             return parameters
