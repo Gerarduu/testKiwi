@@ -24,6 +24,15 @@ let kFlightsPath = "/flights"
 let kDummyLat = "49.2"
 let kDummyLon = "16.61"
 
+let kEsLat = "41.38"
+let kEsLon = "2.17"
+
+let kCatLat = "41.38"
+let kCatLon = "2.17"
+
+let kJapLat = "35.67"
+let kJapLon = "139.65"
+
 let kLocale = "locale"
 let kV = "v"
 let kSort = "sort"

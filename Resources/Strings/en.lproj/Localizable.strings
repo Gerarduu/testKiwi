@@ -21,3 +21,4 @@
 "error.generic" = "Something went wrong...";
 "error.retry" = "Retry";
 "error.ok" = "OK";
+"error.no_flights" = "Unfortunately, there are now flights available at the moment. Please, try again later.";

@@ -84,7 +84,7 @@ extension AppDelegate: CLLocationManagerDelegate {
         } else if CLLocationManager.authorizationStatus() == .notDetermined {
             locationManager.requestAlwaysAuthorization()
         } else {
-            print("Err")
+            setupFirstScreen()
         }
     }
     

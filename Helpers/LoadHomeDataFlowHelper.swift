@@ -28,7 +28,7 @@ class LoadHomeDataFlowHelper {
             var newFlights = Set<Flight>()
             
             if self.flights.count <= 0 {
-                self.delegate?.error(AppError.generic)
+                self.delegate?.error(AppError.noFlights)
                 return
             }
             
@@ -45,6 +45,11 @@ class LoadHomeDataFlowHelper {
                 )}
                 
                 let count = self.filteredFlights.count
+                
+                if self.filteredFlights.count <= 0 {
+                    self.delegate?.error(AppError.noFlights)
+                    return
+                }
                 
                 for i in 0..<count {
                     if i == kMaxFlights {
