@@ -21,6 +21,7 @@ class FlightTVC: UITableViewCell {
     @IBOutlet weak var toDescLbl: UILabel!
     @IBOutlet weak var toLbl: UILabel!
     @IBOutlet weak var infoBtn: MyInfoButton!
+    @IBOutlet weak var imgTo: UIImageView!
     
     var flight: Flight?
     
@@ -29,6 +30,10 @@ class FlightTVC: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
+    }
+    
+    override func prepareForReuse() {
+        imgTo.image = nil
     }
     
     func setupUI() {
@@ -50,6 +55,8 @@ class FlightTVC: UITableViewCell {
         toLbl.font = UIFont.boldSystemFont(ofSize: 30)
         
         infoBtn.setTitle("flight_tvc.flight_info_btn".localized, for: .normal)
+        
+        imgTo.layer.cornerRadius = 8
     }
     
     func configureCell(with flight: Flight) {
@@ -58,6 +65,17 @@ class FlightTVC: UITableViewCell {
         durationLbl.text = self.flight?.flyDuration
         fromLbl.text = self.flight?.flyFrom
         toLbl.text = self.flight?.flyTo
+        
+        /// Loading Image
+        DispatchQueue.global(qos: .background).async {
+            let url = URL(string: kUrlImages)
+            guard let mapIdTo = self.flight?.mapIdto, let urlImg = url?.appendingPathComponent(mapIdTo).appendingPathExtension(kJPGExtension) else {return}
+            if let data = try? Data(contentsOf: urlImg) {
+                DispatchQueue.main.async {
+                    self.imgTo.image = UIImage(data: data)
+                }
+            }
+        }
     }
     
     @IBAction func actionInfo(_ sender: Any) {

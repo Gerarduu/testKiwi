@@ -38,4 +38,7 @@ let kAdults = "adults"
 let kLimit = "limit"
 let kPartner = "partner"
 
-let kMaxFlights = 5 
+let kMaxFlights = 5
+
+let kUrlImages = "https://images.kiwi.com/photos/600x330/"
+let kJPGExtension = "jpg"

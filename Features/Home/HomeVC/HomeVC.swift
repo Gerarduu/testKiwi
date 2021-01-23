@@ -25,7 +25,7 @@ class HomeVC: BaseVC {
     @IBOutlet weak var mainTV: UITableView! {
         didSet {
             mainTV.showsVerticalScrollIndicator = false
-            mainTV.rowHeight = 200.0
+            mainTV.rowHeight = 386.0
             mainTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             mainTV.delegate = self
             mainTV.dataSource = self
