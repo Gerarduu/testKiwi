@@ -7,15 +7,33 @@
 
 import Foundation
 
-import UIKit
+// MARK: - Methods
 
-//MARK: - Storyboards
+let kHTTPMethodGet = "GET"
 
-let kStoryboardMain = UIStoryboard(name: "Main", bundle: nil)
-let kStoryboardHome = UIStoryboard(name: "Home", bundle: nil)
+// MARK: - Base URL
 
-// MARK: - ViewControllers
+let kBaseURL = "https://api.skypicker.com"
 
-let kFakeSplashVC = "FakeSplashVC"
-let kHomeVC = "HomeVC"
-let kLoadingVC = "LoadingVC"
+// MARK: - Path
+
+let kFlightsPath = "/flights"
+
+// MARK: - QueryParams
+
+let kDummyLat = "49.2"
+let kDummyLon = "16.61"
+
+let kLocale = "locale"
+let kV = "v"
+let kSort = "sort"
+let kFlyFrom = "flyFrom"
+let kTo = "to"
+let kFeatureName = "featureName"
+let kDateFrom = "dateFrom"
+let kDateTo = "dateTo"
+let kTypeFlight = "typeFlight"
+let kOneForCity = "oneforcity"
+let kAdults = "adults"
+let kLimit = "5"
+let kPartner = "partner"

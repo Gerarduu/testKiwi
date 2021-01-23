@@ -6,3 +6,6 @@
 //
 
 import Foundation
+
+let kPrefsLatitude = "latitude"
+let kPrefsLongitude = "longitude"
