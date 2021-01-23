@@ -18,3 +18,11 @@ let kStoryboardHome = UIStoryboard(name: "Home", bundle: nil)
 let kFakeSplashVC = "FakeSplashVC"
 let kHomeVC = "HomeVC"
 let kLoadingVC = "LoadingVC"
+
+// MARK: - Nibs
+
+let kFlightTVC = "FlightTVC"
+
+// MARK: - Colors
+
+let kColorLightGray = UIColor(red: 248/255, green: 248/255, blue: 249/255, alpha: 1)
