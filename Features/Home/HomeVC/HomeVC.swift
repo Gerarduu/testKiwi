@@ -8,9 +8,19 @@
 import UIKit
 import SafariServices
 
-class HomeVC: UIViewController {
+class HomeVC: BaseVC {
 
     var flights = [Flight]()
+    var homeVM = HomeVM()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        
+        refreshControl.addTarget(self, action: #selector(pullToRefresh), for: UIControl.Event.valueChanged)
+        refreshControl.tintColor = UIColor.gray
+        
+        return refreshControl
+    }()
     
     @IBOutlet weak var mainTV: UITableView! {
         didSet {
@@ -23,6 +33,8 @@ class HomeVC: UIViewController {
             mainTV.register(UINib(nibName: kFlightTVC, bundle: .main), forCellReuseIdentifier: kFlightTVC)
             
             mainTV.separatorStyle = .none
+            
+            mainTV.addSubview(refreshControl)
         }
     }
     
@@ -33,6 +45,7 @@ class HomeVC: UIViewController {
     }
     
     func setup() {
+        homeVM.delegate = self
         title = "home_vc.title".localized
     }
     
@@ -45,6 +58,25 @@ class HomeVC: UIViewController {
             return cell
         }
         return UITableViewCell()
+    }
+    
+    @objc func pullToRefresh() {
+        homeVM.loadHomeData()
+    }
+}
+
+extension HomeVC: HomeVMDelegate {
+    func didLoadData(_ data: [Flight]) {
+        self.flights = data
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else {return}
+            self.refreshControl.endRefreshing()
+            self.mainTV.reloadData()
+        }
+    }
+    
+    func error(_ error: Error) {
+        showPopup(withTitle: "error.generic".localized, withText: error.localizedDescription, withButton: "error.ok".localized, completion: nil)
     }
 }
 

@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let locationManager = CLLocationManager()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FlightCacheManager.shared.start()
         appHasAlreadyLaunched()
         setupLocManager()
         // Override point for customization after application launch.
