@@ -35,5 +35,7 @@ let kDateTo = "dateTo"
 let kTypeFlight = "typeFlight"
 let kOneForCity = "oneforcity"
 let kAdults = "adults"
-let kLimit = "5"
+let kLimit = "limit"
 let kPartner = "partner"
+
+let kMaxFlights = 5 
