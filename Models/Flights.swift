@@ -11,7 +11,7 @@ struct FlightsRoot: Codable {
     var data: [Flight]?
 }
  
-struct Flight: Codable {
+struct Flight: Codable, Hashable {
     
     var id: String?
     var dTime: Int?
@@ -33,7 +33,7 @@ struct Flight: Codable {
         case cityFrom = "cityFrom"
         case flyTo = "flyTo"
         case cityTo = "cityTo"
-        case mapIdto = "mapIdTo"
+        case mapIdto = "mapIdto"
         case deepLink = "deep_link"
     }
 }

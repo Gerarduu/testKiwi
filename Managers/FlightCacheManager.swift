@@ -21,6 +21,11 @@ class FlightCacheManager {
     func start() {
         
         if let delegate = (UIApplication.shared.delegate as? AppDelegate) {
+            if Thread.isMainThread{
+                print("startInMain")
+            } else {
+                print("startInBG")
+            }
             self.managedContext = delegate.persistentContainer.viewContext
             self.persistentContainer = delegate.persistentContainer
             self.flightEntity = NSEntityDescription.entity(forEntityName: kFlightEntity, in: self.managedContext!)

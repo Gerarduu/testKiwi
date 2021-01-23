@@ -18,23 +18,14 @@ class LoadHomeDataFlowHelper {
     
     var flights = [Flight]()
     var cachedFlights = [Flight]()
-    var flightsTemp = [Flight]()
+    var filteredFlights = [Flight]()
     var previousIndex: UInt32?
-    
-    private func randomIndex() -> UInt32 {
-        var randomIndex = arc4random_uniform(UInt32(self.flightsTemp.count-1))
-        while previousIndex == randomIndex {
-            randomIndex = arc4random_uniform(UInt32(self.flightsTemp.count-1))
-        }
-        previousIndex = randomIndex
-        return randomIndex
-    }
     
     private func cacheFlights(finish: @escaping () -> Void) {
         
         DispatchQueue.main.async {
             let oldFlights = FlightCacheManager.shared.getCachedFlights()
-            var newFlights = [Flight]()
+            var newFlights = Set<Flight>()
             
             if self.flights.count <= 0 {
                 self.delegate?.error(AppError.generic)
@@ -46,15 +37,22 @@ class LoadHomeDataFlowHelper {
                     if i == kMaxFlights {
                         break
                     }
-                    newFlights.append(flight)
+                    newFlights.insert(flight)
                 }
             } else {
-                self.flightsTemp = self.flights.filter { flight in
+                self.filteredFlights = self.flights.filter { flight in
                     !oldFlights.contains(where: {$0.id == flight.id}
                 )}
                 
-                for _ in 0..<kMaxFlights {
-                    newFlights.append(self.flightsTemp[Int(self.randomIndex())])
+                let count = self.filteredFlights.count
+                
+                for i in 0..<count {
+                    if i == kMaxFlights {
+                        break
+                    }
+                    if let flight = self.filteredFlights.randomElement() {
+                        newFlights.insert(flight)
+                    }
                 }
             }
             
@@ -62,9 +60,8 @@ class LoadHomeDataFlowHelper {
                 for flight in newFlights {
                     FlightCacheManager.shared.saveFlightId(flight: flight)
                 }
-                DispatchQueue.main.async {
-                    finish()
-                }
+                
+                finish()
             }
         }
     }
