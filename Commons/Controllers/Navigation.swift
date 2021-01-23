@@ -18,6 +18,15 @@ class Navigation {
         setRootController(UINavigationController(rootViewController: fakeSplashVC))
     }
     
+    func setRootHome(flights: [Flight]) {
+        DispatchQueue.main.async { [weak self] in
+            if let homeVC = kStoryboardHome.instantiateViewController(withIdentifier: kHomeVC) as? HomeVC {
+                homeVC.flights = flights
+                self?.setRootController(UINavigationController(rootViewController: homeVC))
+            }
+        }
+    }
+    
     private func setRootController(_ controller: UIViewController, animated: Bool = false, completion: (() -> Void)? = nil ) {
         if animated {
             CATransaction.begin()

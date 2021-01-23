@@ -27,7 +27,9 @@ class FakeSplashVC: BaseVC {
         fakeSplashVM.loadData()
     }
     
-    func pushHome(){}
+    func pushHome(){
+        Navigation.shared.setRootHome(flights: self.flights)
+    }
 }
 
 extension FakeSplashVC: FakeSplashVMDelegate {
@@ -39,5 +41,8 @@ extension FakeSplashVC: FakeSplashVMDelegate {
     
     func error(_ error: Error) {
         stopWaiting()
+        showPopup(withTitle: "error.generic".localized, withText: error.localizedDescription, withButton: "error.retry".localized, completion: { (retry,_) in
+            self.loadData()
+        })
     }
 }
