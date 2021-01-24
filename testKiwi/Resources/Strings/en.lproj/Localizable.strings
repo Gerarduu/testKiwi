@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  testKiwi
+
+  Created by Gerard Riera  on 23/01/2021.
+  
+*/
+
+/// HomeVC
+
+"home_vc.title" = "Flights";
+
+/// FlightTVC
+
+"flight_tvc.from_desc" = "FROM";
+"flight_tvc.to_desc" = "TO";
+"flight_tvc.flight_info_btn" = "Flight Info";
+
+/// Error
+
+"error.generic" = "Something went wrong...";
+"error.retry" = "Retry";
+"error.ok" = "OK";
+"error.no_flights" = "Unfortunately, there are now flights available at the moment. Please, try again later.";
