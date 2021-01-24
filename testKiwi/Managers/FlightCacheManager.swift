@@ -33,12 +33,6 @@ class FlightCacheManager {
         
         managedContext?.perform {
             
-            if Thread.isMainThread{
-                print("saveFlightInMain")
-            } else {
-                print("saveFlightInBG")
-            }
-            
             guard let flightEntity = self.flightEntity else {return}
             
             let flightEn = NSManagedObject(entity: flightEntity, insertInto: self.managedContext)
@@ -56,7 +50,7 @@ class FlightCacheManager {
             do {
                 try self.managedContext?.save()
             } catch let error as NSError {
-                print("Could not save file. \(error), \(error.userInfo)")
+                debugPrint("Could not save file. \(error), \(error.userInfo)")
             }
         }
     }
@@ -65,12 +59,6 @@ class FlightCacheManager {
         
         managedContext?.perform {
             
-            if Thread.isMainThread{
-                print("getInMain")
-            } else {
-                print("getInBG")
-            }
-        
             var flights = [Flight]()
             
             let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: kFlightEntity)
@@ -99,7 +87,7 @@ class FlightCacheManager {
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
+                debugPrint("Could not fetch. \(error), \(error.userInfo)")
                 finish([Flight](), error)
             }
             
@@ -111,15 +99,8 @@ class FlightCacheManager {
         
         managedContext?.perform {
             
-            if Thread.isMainThread{
-                print("DelInMain")
-            } else {
-                print("DelInBG")
-            }
-            
             do {
                 guard let id = flight.id else {
-                    print("malformedId")
                     return
                 }
                 let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: kFlightEntity)
@@ -134,7 +115,7 @@ class FlightCacheManager {
                 try self.managedContext?.save()
                 
             } catch let error as NSError {
-                print("Could not delete file. \(error), \(error.userInfo)")
+                debugPrint("Could not delete file. \(error), \(error.userInfo)")
             }
         }
     }
