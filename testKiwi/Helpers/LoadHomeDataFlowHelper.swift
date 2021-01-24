@@ -104,7 +104,7 @@ func loadHomeData() {
     if let hasAlreadyLaunched = Preferences.getPrefsHasAlreadyLaunched() {
         if hasAlreadyLaunched {
             if let date = Preferences.getPrefsAppFirstLaunchedTime() {
-                if let diff = Calendar.current.dateComponents([.second], from: date, to: Date()).second, diff > 30{
+                if let diff = Calendar.current.dateComponents([.hour], from: date, to: Date()).second, diff > 24 {
                     loadData()
                 } else {
                     FlightCacheManager.shared.getCachedFlights { (flights, error) in
