@@ -46,7 +46,7 @@ class LoadHomeDataFlowHelper {
                 
                 let count = self.filteredFlights.count
                 
-                if self.filteredFlights.count <= 0 {
+                if count <= 0 {
                     self.delegate?.error(AppError.noFlights)
                     return
                 }
@@ -96,13 +96,14 @@ class LoadHomeDataFlowHelper {
         if let hasAlreadyLaunched = Preferences.getPrefsHasAlreadyLaunched() {
             if hasAlreadyLaunched {
                 if let date = Preferences.getPrefsAppFirstLaunchedTime() {
-                    if let diff = Calendar.current.dateComponents([.second], from: date, to: Date()).second, diff > 1 {
+                    if let diff = Calendar.current.dateComponents([.hour], from: date, to: Date()).second, diff > 24 {
                         loadData()
                     } else {
                         DispatchQueue.main.async {
                             self.cachedFlights = FlightCacheManager.shared.getCachedFlights()
                             if self.cachedFlights.count > 0 {
-                                self.delegate?.didLoadData(self.sortedById(self.cachedFlights))
+                                let sortedFlights = self.sortedById(self.cachedFlights)
+                                self.delegate?.didLoadData(sortedFlights)
                             } else {
                                 self.loadData()
                             }
@@ -132,7 +133,8 @@ class LoadHomeDataFlowHelper {
                 self.cacheFlights {
                     DispatchQueue.main.async {
                         self.cachedFlights = FlightCacheManager.shared.getCachedFlights()
-                        self.delegate?.didLoadData(self.sortedById(self.cachedFlights))
+                        let sortedFlights = self.sortedById(self.cachedFlights)
+                        self.delegate?.didLoadData(sortedFlights)
                         Preferences.setPrefsAppFirstLaunchedTime(value: Date())
                     }
                 }

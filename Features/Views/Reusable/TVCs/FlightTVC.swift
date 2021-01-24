@@ -58,7 +58,7 @@ class FlightTVC: UITableViewCell {
         
         imgTo.layer.cornerRadius = 8
     }
-    
+
     func configureCell(with flight: Flight) {
         self.flight = flight
         
