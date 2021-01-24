@@ -100,38 +100,35 @@ class LoadHomeDataFlowHelper {
         return sortedFlights
     }
     
-    func loadHomeData() {
-        if let hasAlreadyLaunched = Preferences.getPrefsHasAlreadyLaunched() {
-            if hasAlreadyLaunched {
-                if let date = Preferences.getPrefsAppFirstLaunchedTime() {
-                    if let diff = Calendar.current.dateComponents([.second], from: date, to: Date()).second, diff > 30{
-                        loadData()
-                        print("LoadDataFromAPIADayHasPAssed")
-                    } else {
-                        FlightCacheManager.shared.getCachedFlights { (flights, error) in
-                            if error != nil {
-                                self.delegate?.error(AppError.generic)
-                                return
-                            }
-                            self.cachedFlights = flights
-                            if self.cachedFlights.count > 0 {
-                                print("LoadDataFromCache")
-                                let sortedFlights = self.sortedById(self.cachedFlights)
-                                self.delegate?.didLoadData(sortedFlights)
-                            } else {
-                                print("LoadDataFromCacheNoCachedFlights")
-                                self.loadData()
-                            }
+func loadHomeData() {
+    if let hasAlreadyLaunched = Preferences.getPrefsHasAlreadyLaunched() {
+        if hasAlreadyLaunched {
+            if let date = Preferences.getPrefsAppFirstLaunchedTime() {
+                if let diff = Calendar.current.dateComponents([.second], from: date, to: Date()).second, diff > 30{
+                    loadData()
+                } else {
+                    FlightCacheManager.shared.getCachedFlights { (flights, error) in
+                        if error != nil {
+                            self.delegate?.error(AppError.generic)
+                            return
+                        }
+                        self.cachedFlights = flights
+                        if self.cachedFlights.count > 0 {
+                            let sortedFlights = self.sortedById(self.cachedFlights)
+                            self.delegate?.didLoadData(sortedFlights)
+                        } else {
+                            self.loadData()
                         }
                     }
                 }
-            } else {
-                print("LoadDataFromFirstTime")
-                Preferences.setPrefsHasAlreadyLaunched(value: true)
-                loadData()
             }
+        } else {
+            
+            Preferences.setPrefsHasAlreadyLaunched(value: true)
+            loadData()
         }
     }
+}
     
     private func loadData() {
         APIClient.shared.requestObject(router: APIRouter.flights) { [weak self] (result: Result<FlightsRoot,Error>) in
