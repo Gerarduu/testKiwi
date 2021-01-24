@@ -104,7 +104,7 @@ class LoadHomeDataFlowHelper {
         if let hasAlreadyLaunched = Preferences.getPrefsHasAlreadyLaunched() {
             if hasAlreadyLaunched {
                 if let date = Preferences.getPrefsAppFirstLaunchedTime() {
-                    if let diff = Calendar.current.dateComponents([.hour], from: date, to: Date()).hour, diff > 24 {
+                    if let diff = Calendar.current.dateComponents([.second], from: date, to: Date()).second, diff > 30{
                         loadData()
                         print("LoadDataFromAPIADayHasPAssed")
                     } else {

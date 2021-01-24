@@ -76,7 +76,9 @@ extension HomeVC: HomeVMDelegate {
     }
     
     func error(_ error: Error) {
-        showPopup(withTitle: "error.generic".localized, withText: error.localizedDescription, withButton: "error.ok".localized, completion: nil)
+        DispatchQueue.main.async {
+            self.refreshControl.endRefreshing()
+        }
     }
 }
 
