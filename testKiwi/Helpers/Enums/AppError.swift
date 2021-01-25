@@ -17,7 +17,6 @@ enum AppError: Error {
         switch self {
         case .message(let message): return message
         case .generic: return "Error"
-        case .noFlights: return "error.no_flights".localized
         default: return ""
         }
     }

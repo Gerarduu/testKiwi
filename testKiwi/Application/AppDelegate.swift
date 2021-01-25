@@ -34,8 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func setupFirstScreen() {
-        //Delay in order to let the Location PopUp be removed from the View
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+        //Delay in order to let the Location PopUp be removed from the View, in case FakeSplashVC has to show another pop-up with an error.
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
             Navigation.shared.setSplash()
         }
     }
@@ -80,11 +80,11 @@ extension AppDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             manager.startUpdatingLocation()
-            setupFirstScreen()
+            setupFirstScreen() /// Will use user coordinates
         } else if CLLocationManager.authorizationStatus() == .notDetermined {
             locationManager.requestAlwaysAuthorization()
         } else {
-            setupFirstScreen()
+            setupFirstScreen() /// Will use specific coordinates depending on App's language
         }
     }
     

@@ -15,6 +15,8 @@ class LoadingVC: UIViewController {
     
     var color: UIColor?
     let containerView: UIView?
+    
+    lazy var window: UIWindow? = UIWindow(frame: UIScreen.main.bounds)
         
     init(color: UIColor? = UIColor.white, containerView: UIView? = nil) {
         self.color = color
@@ -40,9 +42,11 @@ class LoadingVC: UIViewController {
             container.addSubview(view)
             UIView.addConstraints(self.view, in: container)
         } else if view.superview == nil {
-            if let window = UIApplication.shared.keyWindow {
+            if let window = self.window {
                 view.frame = window.frame
-                UIApplication.shared.keyWindow!.addSubview(view)
+                if let keyWindow = UIApplication.shared.keyWindow {
+                    keyWindow.addSubview(view)
+                }
             }
         } else if activityIndicator.isAnimating { return }
             

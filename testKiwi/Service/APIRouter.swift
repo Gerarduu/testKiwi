@@ -37,8 +37,8 @@ enum APIRouter {
                         lat = kCatLat
                         lon = kCatLon
                     default:
-                        lat = kJapLat
-                        lon = kJapLon
+                        lat = kCatLat
+                        lon = kCatLon
                     }
                 } else {
                     lat = kCatLat

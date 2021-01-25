@@ -22,6 +22,8 @@ class FlightTVC: UITableViewCell {
     @IBOutlet weak var toLbl: UILabel!
     @IBOutlet weak var infoBtn: MyInfoButton!
     @IBOutlet weak var imgTo: UIImageView!
+    @IBOutlet weak var priceView: UIVisualEffectView!
+    @IBOutlet weak var priceLbl: UILabel!
     
     var flight: Flight?
     
@@ -57,6 +59,12 @@ class FlightTVC: UITableViewCell {
         infoBtn.setTitle("flight_tvc.flight_info_btn".localized, for: .normal)
         
         imgTo.layer.cornerRadius = 8
+        
+        priceView.layer.cornerRadius = priceView.frame.height/2
+        priceView.clipsToBounds = true
+        
+        priceLbl.font = UIFont.boldSystemFont(ofSize: 15)
+        priceLbl.textColor = .white
     }
 
     func configureCell(with flight: Flight) {
@@ -66,17 +74,62 @@ class FlightTVC: UITableViewCell {
         fromLbl.text = self.flight?.flyFrom
         toLbl.text = self.flight?.flyTo
         
+        if let price = self.flight?.price {
+            priceLbl.text = "\(price) \(kEur)"
+        } else {
+            priceLbl.text = kNoData
+        }
+        
         /// Loading Image
         DispatchQueue.global(qos: .background).async {
+            
             let url = URL(string: kUrlImages)
             guard let mapIdTo = self.flight?.mapIdto, let urlImg = url?.appendingPathComponent(mapIdTo).appendingPathExtension(kJPGExtension) else {return}
-            if let data = try? Data(contentsOf: urlImg) {
+            guard let flightId = self.flight?.id else {return}
+            
+            if let img = self.getSavedImage(imgName: flightId) {
                 DispatchQueue.main.async {
-                    self.imgTo.image = UIImage(data: data)
+                    self.imgTo.image = img
+                }
+            } else {
+                if let data = try? Data(contentsOf: urlImg) {
+                    DispatchQueue.main.async {
+                        guard let img = UIImage(data: data) else {return}
+                        self.imgTo.image = img
+                        self.saveImageToLocal(inImg: img, imgName: flightId)
+                    }
                 }
             }
         }
     }
+    
+    func saveImageToLocal(inImg: UIImage, imgName: String) {
+            
+        guard let data = inImg.jpegData(compressionQuality: 1) ?? inImg.pngData() else {
+            return
+        }
+        
+        guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
+            return
+        }
+        
+        do {
+            guard let cacheUrl = directory.appendingPathComponent(imgName)?.appendingPathExtension(kJPGExtension) else {return}
+            try data.write(to: cacheUrl)
+            return
+        } catch {
+            debugPrint("Error saving image: \(error.localizedDescription)")
+            return
+        }
+    }
+    
+    func getSavedImage(imgName: String) -> UIImage? {
+        if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
+            return UIImage(contentsOfFile: URL(fileURLWithPath: dir.path).appendingPathComponent(imgName).appendingPathExtension(kJPGExtension).path)
+        }
+        return nil
+    }
+        
     
     @IBAction func actionInfo(_ sender: Any) {
         guard let url = self.flight?.deepLink else {return}

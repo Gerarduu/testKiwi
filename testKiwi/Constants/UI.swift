@@ -26,3 +26,8 @@ let kFlightTVC = "FlightTVC"
 // MARK: - Colors
 
 let kColorLightGray = UIColor(red: 248/255, green: 248/255, blue: 249/255, alpha: 1)
+
+// MARK: - No Data
+
+let kNoData = "N/D"
+let kEur = "€"

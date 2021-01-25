@@ -11,8 +11,9 @@
         <attribute name="flyTo" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="mapIdTo" optional="YES" attributeType="String"/>
+        <attribute name="price" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="FlightEntity" positionX="-63" positionY="-18" width="128" height="193"/>
+        <element name="FlightEntity" positionX="-63" positionY="-18" width="128" height="208"/>
     </elements>
 </model>

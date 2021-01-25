@@ -47,7 +47,12 @@ let kAdults = "adults"
 let kLimit = "limit"
 let kPartner = "partner"
 
+// MARK: - Max Flights
+
 let kMaxFlights = 5
+
+// MARK: - URLs
 
 let kUrlImages = "https://images.kiwi.com/photos/600x330/"
 let kJPGExtension = "jpg"
+

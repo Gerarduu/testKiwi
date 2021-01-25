@@ -23,8 +23,12 @@ class LoadHomeDataFlowHelper {
     
     private func cacheFlights(finish: @escaping () -> Void) {
         
-        DispatchQueue.main.async {
-            let oldFlights = FlightCacheManager.shared.getCachedFlights()
+        FlightCacheManager.shared.getCachedFlights { (flights, error) in
+            if error != nil {
+                self.delegate?.error(AppError.noFlights)
+            }
+            
+            let oldFlights = flights
             var newFlights = Set<Flight>()
             
             if self.flights.count <= 0 {
@@ -72,12 +76,16 @@ class LoadHomeDataFlowHelper {
     }
     
     private func clearOldCache(finish: @escaping () -> Void) {
-        DispatchQueue.main.async {
-            let oldFlights = FlightCacheManager.shared.getCachedFlights()
-            for oldFlight in oldFlights {
-                FlightCacheManager.shared.deleteFlight(flight: oldFlight)
+        FlightCacheManager.shared.getCachedFlights { (flights, error) in
+            if error != nil {
+                
+            } else {
+                let oldFlights = flights
+                for oldFlight in oldFlights {
+                    FlightCacheManager.shared.deleteFlight(flight: oldFlight)
+                }
+                finish()
             }
-            finish()
         }
     }
     
@@ -92,30 +100,35 @@ class LoadHomeDataFlowHelper {
         return sortedFlights
     }
     
-    func loadHomeData() {
-        if let hasAlreadyLaunched = Preferences.getPrefsHasAlreadyLaunched() {
-            if hasAlreadyLaunched {
-                if let date = Preferences.getPrefsAppFirstLaunchedTime() {
-                    if let diff = Calendar.current.dateComponents([.hour], from: date, to: Date()).second, diff > 24 {
-                        loadData()
-                    } else {
-                        DispatchQueue.main.async {
-                            self.cachedFlights = FlightCacheManager.shared.getCachedFlights()
-                            if self.cachedFlights.count > 0 {
-                                let sortedFlights = self.sortedById(self.cachedFlights)
-                                self.delegate?.didLoadData(sortedFlights)
-                            } else {
-                                self.loadData()
-                            }
+func loadHomeData() {
+    if let hasAlreadyLaunched = Preferences.getPrefsHasAlreadyLaunched() {
+        if hasAlreadyLaunched {
+            if let date = Preferences.getPrefsAppFirstLaunchedTime() {
+                if let diff = Calendar.current.dateComponents([.hour], from: date, to: Date()).hour, diff > 24 {
+                    loadData()
+                } else {
+                    FlightCacheManager.shared.getCachedFlights { (flights, error) in
+                        if error != nil {
+                            self.delegate?.error(AppError.generic)
+                            return
+                        }
+                        self.cachedFlights = flights
+                        if self.cachedFlights.count > 0 {
+                            let sortedFlights = self.sortedById(self.cachedFlights)
+                            self.delegate?.didLoadData(sortedFlights)
+                        } else {
+                            self.loadData()
                         }
                     }
                 }
-            } else {
-                Preferences.setPrefsHasAlreadyLaunched(value: true)
-                loadData()
             }
+        } else {
+            
+            Preferences.setPrefsHasAlreadyLaunched(value: true)
+            loadData()
         }
     }
+}
     
     private func loadData() {
         APIClient.shared.requestObject(router: APIRouter.flights) { [weak self] (result: Result<FlightsRoot,Error>) in
@@ -131,8 +144,8 @@ class LoadHomeDataFlowHelper {
                 }
                 self.flights = data
                 self.cacheFlights {
-                    DispatchQueue.main.async {
-                        self.cachedFlights = FlightCacheManager.shared.getCachedFlights()
+                    FlightCacheManager.shared.getCachedFlights { (flights, error) in
+                        self.cachedFlights = flights
                         let sortedFlights = self.sortedById(self.cachedFlights)
                         self.delegate?.didLoadData(sortedFlights)
                         Preferences.setPrefsAppFirstLaunchedTime(value: Date())
