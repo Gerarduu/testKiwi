@@ -44,6 +44,7 @@ class FlightCacheManager {
             flightEn.setValue(flight.cityFrom, forKey: kFlightCityFrom)
             flightEn.setValue(flight.flyTo, forKey: kFlightFlyTo)
             flightEn.setValue(flight.cityTo, forKey: kFlightCityTo)
+            flightEn.setValue(flight.price, forKey: kPrice)
             flightEn.setValue(flight.mapIdto, forKey: kFlightMapIdto)
             flightEn.setValue(flight.deepLink, forKey: kFlightDeepLink)
             
@@ -79,6 +80,7 @@ class FlightCacheManager {
                         cityFrom: flight.value(forKey: kFlightCityFrom) as? String,
                         flyTo: flight.value(forKey: kFlightFlyTo) as? String,
                         cityTo: flight.value(forKey: kFlightCityTo) as? String,
+                        price: flight.value(forKey: kPrice) as? Int,
                         mapIdto: flight.value(forKey: kFlightMapIdto) as? String,
                         deepLink: flight.value(forKey: kFlightDeepLink) as? URL
                     )

@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func setupFirstScreen() {
-        //Delay in order to let the Location PopUp be removed from the View
+        //Delay in order to let the Location PopUp be removed from the View, in case FakeSplashVC has to show another pop-up with an error.
         DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
             Navigation.shared.setSplash()
         }

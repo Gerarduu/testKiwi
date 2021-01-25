@@ -22,6 +22,8 @@ class FlightTVC: UITableViewCell {
     @IBOutlet weak var toLbl: UILabel!
     @IBOutlet weak var infoBtn: MyInfoButton!
     @IBOutlet weak var imgTo: UIImageView!
+    @IBOutlet weak var priceView: UIVisualEffectView!
+    @IBOutlet weak var priceLbl: UILabel!
     
     var flight: Flight?
     
@@ -57,6 +59,12 @@ class FlightTVC: UITableViewCell {
         infoBtn.setTitle("flight_tvc.flight_info_btn".localized, for: .normal)
         
         imgTo.layer.cornerRadius = 8
+        
+        priceView.layer.cornerRadius = priceView.frame.height/2
+        priceView.clipsToBounds = true
+        
+        priceLbl.font = UIFont.boldSystemFont(ofSize: 15)
+        priceLbl.textColor = .white
     }
 
     func configureCell(with flight: Flight) {
@@ -65,6 +73,12 @@ class FlightTVC: UITableViewCell {
         durationLbl.text = self.flight?.flyDuration
         fromLbl.text = self.flight?.flyFrom
         toLbl.text = self.flight?.flyTo
+        
+        if let price = self.flight?.price {
+            priceLbl.text = "\(price) \(kEur)"
+        } else {
+            priceLbl.text = kNoData
+        }
         
         /// Loading Image
         DispatchQueue.global(qos: .background).async {
