@@ -21,6 +21,7 @@ struct Flight: Codable, Hashable {
     var cityFrom: String?
     var flyTo: String?
     var cityTo: String?
+    var price: Int?
     var mapIdto: String?
     var deepLink: URL?
     
@@ -33,6 +34,7 @@ struct Flight: Codable, Hashable {
         case cityFrom = "cityFrom"
         case flyTo = "flyTo"
         case cityTo = "cityTo"
+        case price = "price"
         case mapIdto = "mapIdto"
         case deepLink = "deep_link"
     }

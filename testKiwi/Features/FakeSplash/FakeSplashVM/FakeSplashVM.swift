@@ -28,7 +28,6 @@ extension FakeSplashVM: LoadHomeDataFlowHelperDelegate {
     func didLoadData(_ data: [Flight]) {
         delegate?.didLoadData(data)
     }
-    
     func error(_ error: Error) {
         delegate?.error(error)
     }
