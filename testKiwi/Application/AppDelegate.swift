@@ -26,8 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        /// If user blocks the screen and he didn't specified his preferences, when the user returns to the app,
-        /// setup again locationManager in order to ask for permisions again.
+        /// When compiling on Xcode 12.3 (didn't check other versions), when the location prompt appears,
+        /// if the user blocks the screen before defining his location, and then goes to the App again,
+        /// the location promt doesn't appear again. So in order to solve that, I'm setting up the
+        /// location manager again.
         if UIApplication.shared.keyWindow?.rootViewController == nil {
             setupLocManager()
         }
