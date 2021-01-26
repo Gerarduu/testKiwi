@@ -26,9 +26,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
     
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        if UIApplication.shared.keyWindow?.rootViewController == nil {
+            setupLocManager()
+        }
+    }
+    
     func setupLocManager() {
         locationManager = CLLocationManager()
         locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
