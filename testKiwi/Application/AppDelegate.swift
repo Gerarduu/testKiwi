@@ -18,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FlightCacheManager.shared.start()
         appHasAlreadyLaunched()
         setupLocManager()
-        // Override point for customization after application launch.
         return true
     }
     
@@ -27,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
+        /// If user blocks the screen and he didn't specified his preferences, when the user returns to the app,
+        /// setup again locationManager in order to ask for permisions again.
         if UIApplication.shared.keyWindow?.rootViewController == nil {
             setupLocManager()
         }
