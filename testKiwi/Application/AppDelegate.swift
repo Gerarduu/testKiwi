@@ -92,13 +92,13 @@ extension AppDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             manager.startUpdatingLocation()
-            print("delegateFirst")
+            debugPrint("delegate_first")
             setupFirstScreen() /// Will use user coordinates
         } else if CLLocationManager.authorizationStatus() == .notDetermined {
-            print("delegatesec")
+            debugPrint("delegate_second")
             locationManager.requestAlwaysAuthorization()
         } else {
-            print("delegatethird")
+            debugPrint("delegate_third")
             setupFirstScreen() /// Will use specific coordinates depending on App's language
         }
     }
