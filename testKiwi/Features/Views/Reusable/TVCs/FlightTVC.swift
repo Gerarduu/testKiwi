@@ -24,6 +24,8 @@ class FlightTVC: UITableViewCell {
     @IBOutlet weak var imgTo: UIImageView!
     @IBOutlet weak var priceView: UIVisualEffectView!
     @IBOutlet weak var priceLbl: UILabel!
+    @IBOutlet weak var departureLbl: UILabel!
+    @IBOutlet weak var arrivalLbl: UILabel!
     
     var flight: Flight?
     
@@ -42,12 +44,13 @@ class FlightTVC: UITableViewCell {
         
         flightView.layer.borderWidth = 2
         flightView.layer.borderColor = kColorLightGray.cgColor
-        flightView.layer.cornerRadius = 8
+        flightView.layer.cornerRadius = 15
         
         fromDescLbl.font = UIFont.systemFont(ofSize: 10)
         fromDescLbl.textColor = .gray
         fromDescLbl.text = "flight_tvc.from_desc".localized
         fromLbl.font = UIFont.boldSystemFont(ofSize: 30)
+        departureLbl.font = UIFont.systemFont(ofSize: 10)
         
         durationLbl.font = UIFont.systemFont(ofSize: 10)
         
@@ -55,10 +58,11 @@ class FlightTVC: UITableViewCell {
         toDescLbl.font = UIFont.systemFont(ofSize: 10)
         toDescLbl.text = "flight_tvc.to_desc".localized
         toLbl.font = UIFont.boldSystemFont(ofSize: 30)
+        arrivalLbl.font = UIFont.systemFont(ofSize: 10)
         
         infoBtn.setTitle("flight_tvc.flight_info_btn".localized, for: .normal)
         
-        imgTo.layer.cornerRadius = 8
+        imgTo.layer.cornerRadius = 15
         
         priceView.layer.cornerRadius = priceView.frame.height/2
         priceView.clipsToBounds = true
@@ -68,11 +72,30 @@ class FlightTVC: UITableViewCell {
     }
 
     func configureCell(with flight: Flight) {
+        
         self.flight = flight
         
         durationLbl.text = self.flight?.flyDuration
         fromLbl.text = self.flight?.flyFrom
         toLbl.text = self.flight?.flyTo
+        
+        if let milisecond = self.flight?.dTime {
+            let dateVar = Date.init(timeIntervalSince1970: TimeInterval(milisecond))
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            departureLbl.text = "\(dateFormatter.string(from: dateVar))"
+        } else {
+            departureLbl.text = kNoData
+        }
+        
+        if let milisecond = self.flight?.aTime {
+            let dateVar = Date.init(timeIntervalSince1970: TimeInterval(milisecond))
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            arrivalLbl.text = "\(dateFormatter.string(from: dateVar))"
+        } else {
+            arrivalLbl.text = kNoData
+        }
         
         if let price = self.flight?.price {
             priceLbl.text = "\(price) \(kEur)"

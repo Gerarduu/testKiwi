@@ -12,13 +12,12 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    let locationManager = CLLocationManager()
+    var locationManager: CLLocationManager!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FlightCacheManager.shared.start()
         appHasAlreadyLaunched()
         setupLocManager()
-        // Override point for customization after application launch.
         return true
     }
     
@@ -26,8 +25,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
     
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        /// If user blocks the screen and he didn't specified his preferences, when the user returns to the app,
+        /// setup again locationManager in order to ask for permisions again.
+        if UIApplication.shared.keyWindow?.rootViewController == nil {
+            setupLocManager()
+        }
+    }
+    
     func setupLocManager() {
+        locationManager = CLLocationManager()
         locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
@@ -80,10 +90,13 @@ extension AppDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             manager.startUpdatingLocation()
+            print("delegateFirst")
             setupFirstScreen() /// Will use user coordinates
         } else if CLLocationManager.authorizationStatus() == .notDetermined {
+            print("delegatesec")
             locationManager.requestAlwaysAuthorization()
         } else {
+            print("delegatethird")
             setupFirstScreen() /// Will use specific coordinates depending on App's language
         }
     }
