@@ -29,11 +29,8 @@ class HomeVC: BaseVC {
             mainTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             mainTV.delegate = self
             mainTV.dataSource = self
-            
             mainTV.register(UINib(nibName: kFlightTVC, bundle: .main), forCellReuseIdentifier: kFlightTVC)
-            
             mainTV.separatorStyle = .none
-            
             mainTV.addSubview(refreshControl)
         }
     }

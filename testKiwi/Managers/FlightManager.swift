@@ -9,47 +9,47 @@ import Foundation
 import CoreData
 import UIKit
 
-class FlightCacheManager {
+class FlightManager: NSObject {
     
-    static let shared = FlightCacheManager()
-    
-    private var managedContext: NSManagedObjectContext?
+    static let shared = FlightManager()
     private var flightEntity: NSEntityDescription?
-    private var persistentContainer: NSPersistentContainer?
-    
-    @objc
-    func start() {
-        
-        if let delegate = (UIApplication.shared.delegate as? AppDelegate) {
-            DispatchQueue.main.async {
-                self.managedContext = delegate.persistentContainer.viewContext
-                self.persistentContainer = delegate.persistentContainer
-                self.flightEntity = NSEntityDescription.entity(forEntityName: kFlightEntity, in: self.managedContext!)
+    static var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: kFlightContainer)
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
             }
-        }
-    }
+        })
+        return container
+    }()
     
-    func saveFlightId(flight: Flight) {
+    func saveFlights(flights: Set<Flight>, finish: @escaping () -> Void) {
         
-        managedContext?.perform {
-            
-            guard let flightEntity = self.flightEntity else {return}
-            
-            let flightEn = NSManagedObject(entity: flightEntity, insertInto: self.managedContext)
-            flightEn.setValue(flight.id, forKey: kFlightId)
-            flightEn.setValue(flight.dTime, forKey: kFlightDtime)
-            flightEn.setValue(flight.aTime, forKey: kFlightATime)
-            flightEn.setValue(flight.flyDuration, forKey: kFlightFlyDuration)
-            flightEn.setValue(flight.flyFrom, forKey: kFlightFlyFrom)
-            flightEn.setValue(flight.cityFrom, forKey: kFlightCityFrom)
-            flightEn.setValue(flight.flyTo, forKey: kFlightFlyTo)
-            flightEn.setValue(flight.cityTo, forKey: kFlightCityTo)
-            flightEn.setValue(flight.price, forKey: kPrice)
-            flightEn.setValue(flight.mapIdto, forKey: kFlightMapIdto)
-            flightEn.setValue(flight.deepLink, forKey: kFlightDeepLink)
+        let context = FlightManager.persistentContainer.viewContext
+        
+        guard let flightEntity = NSEntityDescription.entity(forEntityName: kFlightEntity, in: context) else { return }
+        
+        context.perform {
+            for (i,flight) in flights.enumerated() {
+                let flightEn = NSManagedObject(entity: flightEntity, insertInto: context)
+                flightEn.setValue(flight.id, forKey: kFlightId)
+                flightEn.setValue(flight.dTime, forKey: kFlightDtime)
+                flightEn.setValue(flight.aTime, forKey: kFlightATime)
+                flightEn.setValue(flight.flyDuration, forKey: kFlightFlyDuration)
+                flightEn.setValue(flight.flyFrom, forKey: kFlightFlyFrom)
+                flightEn.setValue(flight.cityFrom, forKey: kFlightCityFrom)
+                flightEn.setValue(flight.flyTo, forKey: kFlightFlyTo)
+                flightEn.setValue(flight.cityTo, forKey: kFlightCityTo)
+                flightEn.setValue(flight.price, forKey: kPrice)
+                flightEn.setValue(flight.mapIdto, forKey: kFlightMapIdto)
+                flightEn.setValue(flight.deepLink, forKey: kFlightDeepLink)
+                if i == flights.count-1 {
+                    finish()
+                }
+            }
             
             do {
-                try self.managedContext?.save()
+                try context.save()
             } catch let error as NSError {
                 debugPrint("Could not save file. \(error), \(error.userInfo)")
             }
@@ -58,18 +58,17 @@ class FlightCacheManager {
     
     func getCachedFlights(finish: @escaping ([Flight], Error?) -> Void) {
         
-        managedContext?.perform {
+        let context = FlightManager.persistentContainer.viewContext
+         
+        context.perform {
             
             var flights = [Flight]()
             
             let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: kFlightEntity)
                 
             do {
-                guard let managedFlights = try (self.managedContext?.fetch(fetchRequest)) else {
-                    finish([Flight](),AppError.generic)
-                    return
-                }
-                
+                let managedFlights = try (context.fetch(fetchRequest))
+                 
                 for flight in managedFlights {
                     let cachedFlight = Flight.init(
                         id: flight.value(forKey: kFlightId) as? String,
@@ -98,9 +97,10 @@ class FlightCacheManager {
     }
     
     func deleteFlight(flight: Flight) {
-        
-        managedContext?.perform {
             
+        let context = FlightManager.persistentContainer.viewContext
+            
+        context.perform {
             do {
                 guard let id = flight.id else {
                     return
@@ -108,13 +108,13 @@ class FlightCacheManager {
                 let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: kFlightEntity)
                 fetchRequest.predicate = NSPredicate(format: "id = %@", id)
                 
-                let obj = try self.managedContext?.fetch(fetchRequest)
+                let obj = try context.fetch(fetchRequest)
                 
-                let flightToDelete = obj?[0]
+                let flightToDelete = obj[0]
                 
-                self.managedContext?.delete(flightToDelete!)
+                context.delete(flightToDelete)
                 
-                try self.managedContext?.save()
+                try context.save()
                 
             } catch let error as NSError {
                 debugPrint("Could not delete file. \(error), \(error.userInfo)")
