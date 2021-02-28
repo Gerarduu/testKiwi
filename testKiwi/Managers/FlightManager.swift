@@ -7,7 +7,6 @@
 
 import Foundation
 import CoreData
-import UIKit
 
 class FlightManager: NSObject {
     
@@ -27,22 +26,20 @@ class FlightManager: NSObject {
         
         let context = FlightManager.persistentContainer.viewContext
         
-        guard let flightEntity = NSEntityDescription.entity(forEntityName: kFlightEntity, in: context) else { return }
-        
         context.perform {
-            for (i,flight) in flights.enumerated() {
-                let flightEn = NSManagedObject(entity: flightEntity, insertInto: context)
-                flightEn.setValue(flight.id, forKey: kFlightId)
-                flightEn.setValue(flight.dTime, forKey: kFlightDtime)
-                flightEn.setValue(flight.aTime, forKey: kFlightATime)
-                flightEn.setValue(flight.flyDuration, forKey: kFlightFlyDuration)
-                flightEn.setValue(flight.flyFrom, forKey: kFlightFlyFrom)
-                flightEn.setValue(flight.cityFrom, forKey: kFlightCityFrom)
-                flightEn.setValue(flight.flyTo, forKey: kFlightFlyTo)
-                flightEn.setValue(flight.cityTo, forKey: kFlightCityTo)
-                flightEn.setValue(flight.price, forKey: kPrice)
-                flightEn.setValue(flight.mapIdto, forKey: kFlightMapIdto)
-                flightEn.setValue(flight.deepLink, forKey: kFlightDeepLink)
+            for (i,flightModel) in flights.enumerated() {
+                let flight = FlightObject(context: context)
+                flight.id = flightModel.id
+                flight.dTime = flightModel.dTime as NSNumber?
+                flight.aTime = flightModel.aTime as NSNumber?
+                flight.flyDuration = flightModel.flyDuration
+                flight.flyFrom = flightModel.flyFrom
+                flight.cityFrom = flightModel.cityFrom
+                flight.flyTo = flightModel.flyTo
+                flight.cityTo = flightModel.cityTo
+                flight.price = flightModel.price as NSNumber?
+                flight.mapIdTo = flightModel.mapIdto
+                flight.deepLink = flightModel.deepLink
                 if i == flights.count-1 {
                     finish()
                 }
@@ -56,66 +53,20 @@ class FlightManager: NSObject {
         }
     }
     
-    func getCachedFlights(finish: @escaping ([Flight], Error?) -> Void) {
-        
+    func getCachedFlights() -> [FlightObject]? {
         let context = FlightManager.persistentContainer.viewContext
-         
-        context.perform {
-            
-            var flights = [Flight]()
-            
-            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: kFlightEntity)
-                
-            do {
-                let managedFlights = try (context.fetch(fetchRequest))
-                 
-                for flight in managedFlights {
-                    let cachedFlight = Flight.init(
-                        id: flight.value(forKey: kFlightId) as? String,
-                        dTime: flight.value(forKey: kFlightDtime) as? Int,
-                        aTime: flight.value(forKey: kFlightATime) as? Int,
-                        flyDuration: flight.value(forKey: kFlightFlyDuration) as? String,
-                        flyFrom: flight.value(forKey: kFlightFlyFrom) as? String,
-                        cityFrom: flight.value(forKey: kFlightCityFrom) as? String,
-                        flyTo: flight.value(forKey: kFlightFlyTo) as? String,
-                        cityTo: flight.value(forKey: kFlightCityTo) as? String,
-                        price: flight.value(forKey: kPrice) as? Int,
-                        mapIdto: flight.value(forKey: kFlightMapIdto) as? String,
-                        deepLink: flight.value(forKey: kFlightDeepLink) as? URL
-                    )
-                    
-                    flights.append(cachedFlight)
-                }
-                
-            } catch let error as NSError {
-                debugPrint("Could not fetch. \(error), \(error.userInfo)")
-                finish([Flight](), error)
-            }
-            
-            finish(flights,nil)
-        }
+        let items = try? context.fetch(FlightObject.fetchRequest()) as? [FlightObject]
+        return items
     }
     
-    func deleteFlight(flight: Flight) {
+    func deleteFlight(flight: FlightObject) {
             
         let context = FlightManager.persistentContainer.viewContext
             
         context.perform {
             do {
-                guard let id = flight.id else {
-                    return
-                }
-                let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: kFlightEntity)
-                fetchRequest.predicate = NSPredicate(format: "id = %@", id)
-                
-                let obj = try context.fetch(fetchRequest)
-                
-                let flightToDelete = obj[0]
-                
-                context.delete(flightToDelete)
-                
+                context.delete(flight)
                 try context.save()
-                
             } catch let error as NSError {
                 debugPrint("Could not delete file. \(error), \(error.userInfo)")
             }

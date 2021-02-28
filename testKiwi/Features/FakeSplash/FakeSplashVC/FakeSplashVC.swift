@@ -10,7 +10,7 @@ import Foundation
 class FakeSplashVC: BaseVC {
     let fakeSplashVM = FakeSplashVM()
     
-    var flights = [Flight]()
+    var flights = [FlightObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +33,7 @@ class FakeSplashVC: BaseVC {
 }
 
 extension FakeSplashVC: FakeSplashVMDelegate {
-    func didLoadData(_ data: [Flight]) {
+    func didLoadData(_ data: [FlightObject]) {
         stopWaiting()
         self.flights = data
         pushHome()

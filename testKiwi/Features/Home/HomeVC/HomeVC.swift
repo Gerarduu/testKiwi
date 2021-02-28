@@ -10,7 +10,7 @@ import SafariServices
 
 class HomeVC: BaseVC {
 
-    var flights = [Flight]()
+    var flights = [FlightObject]()
     var homeVM = HomeVM()
     
     lazy var refreshControl: UIRefreshControl = {
@@ -63,7 +63,7 @@ class HomeVC: BaseVC {
 }
 
 extension HomeVC: HomeVMDelegate {
-    func didLoadData(_ data: [Flight]) {
+    func didLoadData(_ data: [FlightObject]) {
         self.flights = data
         DispatchQueue.main.async { [weak self] in
             guard let `self` = self else {return}
