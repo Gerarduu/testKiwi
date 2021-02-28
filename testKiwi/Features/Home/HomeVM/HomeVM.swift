@@ -8,7 +8,7 @@
 import Foundation
 
 protocol HomeVMDelegate: class {
-    func didLoadData(_ data: [Flight])
+    func didLoadData(_ data: [FlightObject])
     func error(_ error: Error)
 }
 
@@ -25,7 +25,7 @@ class HomeVM {
 }
 
 extension HomeVM: LoadHomeDataFlowHelperDelegate {
-    func didLoadData(_ data: [Flight]) {
+    func didLoadData(_ data: [FlightObject]) {
         delegate?.didLoadData(data)
     }
     

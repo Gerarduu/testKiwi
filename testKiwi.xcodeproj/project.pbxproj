@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F715758625EC0CDE005AFE1C /* Flight.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7638B2C25BC495500049259 /* Flight.xcdatamodeld */; };
 		F7355CD425BC3218001B049B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7355CD325BC3218001B049B /* AppDelegate.swift */; };
 		F7355CD825BC3218001B049B /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7355CD725BC3218001B049B /* HomeVC.swift */; };
 		F7355CDB25BC3218001B049B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7355CD925BC3218001B049B /* Main.storyboard */; };
@@ -34,8 +35,11 @@
 		F7638AF625BC434700049259 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638AF525BC434700049259 /* Buttons.swift */; };
 		F7638B1F25BC489300049259 /* FlightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638B1E25BC489300049259 /* FlightManager.swift */; };
 		F7638B2725BC492400049259 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638B2625BC492400049259 /* CoreData.swift */; };
-		F7638B2E25BC495500049259 /* Flight.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7638B2C25BC495500049259 /* Flight.xcdatamodeld */; };
 		F7638B4B25BC940200049259 /* LoadHomeDataFlowHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638B4A25BC940200049259 /* LoadHomeDataFlowHelper.swift */; };
+		F76DA06425EBEDF900F5A2D8 /* LocationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76DA06325EBEDF900F5A2D8 /* LocationVC.swift */; };
+		F76DA06C25EBEE0400F5A2D8 /* LocationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76DA06B25EBEE0400F5A2D8 /* LocationVM.swift */; };
+		F76DA07125EBF72700F5A2D8 /* FlightObject+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76DA07025EBF72700F5A2D8 /* FlightObject+CoreDataProperties.swift */; };
+		F76DA07625EBF73600F5A2D8 /* FlightObject+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76DA07525EBF73600F5A2D8 /* FlightObject+CoreDataClass.swift */; };
 		F7B6F0BB25BC3AA0002A21AA /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B6F0BA25BC3AA0002A21AA /* AppError.swift */; };
 		F7B6F0CA25BC3B89002A21AA /* FakeSplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B6F0C925BC3B89002A21AA /* FakeSplashVC.swift */; };
 		F7B6F0CF25BC3B94002A21AA /* FakeSplashVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B6F0CE25BC3B94002A21AA /* FakeSplashVM.swift */; };
@@ -95,6 +99,10 @@
 		F7638B2625BC492400049259 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		F7638B2D25BC495500049259 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		F7638B4A25BC940200049259 /* LoadHomeDataFlowHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadHomeDataFlowHelper.swift; sourceTree = "<group>"; };
+		F76DA06325EBEDF900F5A2D8 /* LocationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationVC.swift; sourceTree = "<group>"; };
+		F76DA06B25EBEE0400F5A2D8 /* LocationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationVM.swift; sourceTree = "<group>"; };
+		F76DA07025EBF72700F5A2D8 /* FlightObject+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlightObject+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F76DA07525EBF73600F5A2D8 /* FlightObject+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlightObject+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F7B6F0BA25BC3AA0002A21AA /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		F7B6F0C925BC3B89002A21AA /* FakeSplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSplashVC.swift; sourceTree = "<group>"; };
 		F7B6F0CE25BC3B94002A21AA /* FakeSplashVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSplashVM.swift; sourceTree = "<group>"; };
@@ -214,6 +222,7 @@
 		F7355D0925BC3304001B049B /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				F76DA06225EBEDEC00F5A2D8 /* Location */,
 				F7B6F0C225BC3AF6002A21AA /* Views */,
 				F7355D1E25BC337B001B049B /* Home */,
 				F7355D1B25BC335A001B049B /* FakeSplash */,
@@ -389,8 +398,19 @@
 			isa = PBXGroup;
 			children = (
 				F7638B2C25BC495500049259 /* Flight.xcdatamodeld */,
+				F76DA07525EBF73600F5A2D8 /* FlightObject+CoreDataClass.swift */,
+				F76DA07025EBF72700F5A2D8 /* FlightObject+CoreDataProperties.swift */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		F76DA06225EBEDEC00F5A2D8 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				F76DA06325EBEDF900F5A2D8 /* LocationVC.swift */,
+				F76DA06B25EBEE0400F5A2D8 /* LocationVM.swift */,
+			);
+			path = Location;
 			sourceTree = "<group>";
 		};
 		F7B6F0B925BC3A93002A21AA /* Enums */ = {
@@ -570,10 +590,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7B6F0D425BC3CDE002A21AA /* Flights.swift in Sources */,
-				F7638B2E25BC495500049259 /* Flight.xcdatamodeld in Sources */,
 				F7638B4B25BC940200049259 /* LoadHomeDataFlowHelper.swift in Sources */,
 				F7355CD825BC3218001B049B /* HomeVC.swift in Sources */,
 				F7355D5F25BC38F3001B049B /* APIRouter.swift in Sources */,
+				F715758625EC0CDE005AFE1C /* Flight.xcdatamodeld in Sources */,
 				F7B6F0CF25BC3B94002A21AA /* FakeSplashVM.swift in Sources */,
 				F7638B2725BC492400049259 /* CoreData.swift in Sources */,
 				F7355D3A25BC364C001B049B /* UI.swift in Sources */,
@@ -584,14 +604,18 @@
 				F7B6F0BB25BC3AA0002A21AA /* AppError.swift in Sources */,
 				F7355D5A25BC38E9001B049B /* APIClient.swift in Sources */,
 				F7638B1F25BC489300049259 /* FlightManager.swift in Sources */,
+				F76DA06425EBEDF900F5A2D8 /* LocationVC.swift in Sources */,
 				F7355CD425BC3218001B049B /* AppDelegate.swift in Sources */,
+				F76DA06C25EBEE0400F5A2D8 /* LocationVM.swift in Sources */,
 				F7638AF025BC426C00049259 /* String+Utils.swift in Sources */,
+				F76DA07125EBF72700F5A2D8 /* FlightObject+CoreDataProperties.swift in Sources */,
 				F7355D3F25BC3659001B049B /* PrefsConstants.swift in Sources */,
 				F7355D6425BC397E001B049B /* Preferences.swift in Sources */,
 				F7638AF625BC434700049259 /* Buttons.swift in Sources */,
 				F7355D2525BC345A001B049B /* Navigation.swift in Sources */,
 				F7355D3525BC3643001B049B /* API.swift in Sources */,
 				F7355D2B25BC34AF001B049B /* LoadingVC.swift in Sources */,
+				F76DA07625EBF73600F5A2D8 /* FlightObject+CoreDataClass.swift in Sources */,
 				F7B6F0CA25BC3B89002A21AA /* FakeSplashVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

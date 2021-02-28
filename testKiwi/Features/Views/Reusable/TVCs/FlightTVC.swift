@@ -27,7 +27,7 @@ class FlightTVC: UITableViewCell {
     @IBOutlet weak var departureLbl: UILabel!
     @IBOutlet weak var arrivalLbl: UILabel!
     
-    var flight: Flight?
+    var flight: FlightObject?
     
     weak var delegate: FlightTVCDelegate?
     
@@ -71,7 +71,7 @@ class FlightTVC: UITableViewCell {
         priceLbl.textColor = .white
     }
 
-    func configureCell(with flight: Flight) {
+    func configureCell(with flight: FlightObject) {
         
         self.flight = flight
         
@@ -80,7 +80,7 @@ class FlightTVC: UITableViewCell {
         toLbl.text = self.flight?.flyTo
         
         if let milisecond = self.flight?.dTime {
-            let dateVar = Date.init(timeIntervalSince1970: TimeInterval(milisecond))
+            let dateVar = Date.init(timeIntervalSince1970: TimeInterval(truncating: milisecond))
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd-MM-yyyy"
             departureLbl.text = "\(dateFormatter.string(from: dateVar))"
@@ -89,7 +89,7 @@ class FlightTVC: UITableViewCell {
         }
         
         if let milisecond = self.flight?.aTime {
-            let dateVar = Date.init(timeIntervalSince1970: TimeInterval(milisecond))
+            let dateVar = Date.init(timeIntervalSince1970: TimeInterval(truncating: milisecond))
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd-MM-yyyy"
             arrivalLbl.text = "\(dateFormatter.string(from: dateVar))"
@@ -105,9 +105,8 @@ class FlightTVC: UITableViewCell {
         
         /// Loading Image
         DispatchQueue.global(qos: .background).async {
-            
             let url = URL(string: kUrlImages)
-            guard let mapIdTo = self.flight?.mapIdto, let urlImg = url?.appendingPathComponent(mapIdTo).appendingPathExtension(kJPGExtension) else {return}
+            guard let mapIdTo = self.flight?.mapIdTo, let urlImg = url?.appendingPathComponent(mapIdTo).appendingPathExtension(kJPGExtension) else {return}
             guard let flightId = self.flight?.id else {return}
             
             if let img = self.getSavedImage(imgName: flightId) {

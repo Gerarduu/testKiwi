@@ -7,12 +7,8 @@
 
 import Foundation
 
-/// DataModel
-
 let kFlightContainer = "Flight"
 let kFlightEntity = "FlightEntity"
-
-/// Entities
 
 let kFlightId = "id"
 let kFlightDtime = "dTime"

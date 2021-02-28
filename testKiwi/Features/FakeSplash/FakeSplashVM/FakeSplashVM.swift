@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FakeSplashVMDelegate: class {
-    func didLoadData(_ data: [Flight])
+    func didLoadData(_ data: [FlightObject])
     func error(_ error: Error)
 }
 
@@ -25,7 +25,7 @@ class FakeSplashVM {
 }
 
 extension FakeSplashVM: LoadHomeDataFlowHelperDelegate {
-    func didLoadData(_ data: [Flight]) {
+    func didLoadData(_ data: [FlightObject]) {
         delegate?.didLoadData(data)
     }
     func error(_ error: Error) {

@@ -24,6 +24,21 @@
             </objects>
             <point key="canvasLocation" x="139" y="89"/>
         </scene>
+        <!--LocationVC-->
+        <scene sceneID="lLp-0Q-B7v">
+            <objects>
+                <viewController storyboardIdentifier="LocationVC" id="Pbm-GF-tfI" customClass="LocationVC" customModule="testKiwi" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qWR-Ne-YkZ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="ics-5b-kZu"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GnD-zm-OZ5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1061" y="89"/>
+        </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">

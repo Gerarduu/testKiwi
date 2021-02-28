@@ -18,7 +18,7 @@ class Navigation {
         setRootController(UINavigationController(rootViewController: fakeSplashVC))
     }
     
-    func setRootHome(flights: [Flight]) {
+    func setRootHome(flights: [FlightObject]) {
         DispatchQueue.main.async { [weak self] in
             if let homeVC = kStoryboardHome.instantiateViewController(withIdentifier: kHomeVC) as? HomeVC {
                 homeVC.flights = flights

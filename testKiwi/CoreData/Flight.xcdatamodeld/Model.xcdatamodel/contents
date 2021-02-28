@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="FlightEntity" representedClassName="FlightEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="aTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    <entity name="FlightEntity" representedClassName=".FlightObject" syncable="YES">
+        <attribute name="aTime" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="cityFrom" optional="YES" attributeType="String"/>
         <attribute name="cityTo" optional="YES" attributeType="String"/>
         <attribute name="deepLink" optional="YES" attributeType="URI"/>
-        <attribute name="dTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="dTime" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="flyDuration" optional="YES" attributeType="String"/>
         <attribute name="flyFrom" optional="YES" attributeType="String"/>
         <attribute name="flyTo" optional="YES" attributeType="String"/>

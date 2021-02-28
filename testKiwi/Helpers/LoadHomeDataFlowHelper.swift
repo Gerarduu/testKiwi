@@ -8,7 +8,7 @@
 import Foundation
 
 protocol LoadHomeDataFlowHelperDelegate:class{
-    func didLoadData(_ data: [Flight])
+    func didLoadData(_ data: [FlightObject])
     func error(_ error: Error)
 }
 
@@ -20,69 +20,58 @@ class LoadHomeDataFlowHelper {
     
     private func cacheFlights(finish: @escaping () -> Void) {
         
-        FlightManager.shared.getCachedFlights { (cachedFlights, error) in
+        var newFlights = Set<Flight>()
+        
+        //MARK: - If we already have cached flights, pick 5 different flights returned from the API.
+        if let cachedFlights = FlightManager.shared.getCachedFlights() {
+            let filteredFlights = self.flights.filter { flight in
+                !cachedFlights.contains(where: {$0.id == flight.id}
+            )}
             
-            if error != nil {
+            let count = filteredFlights.count
+            
+            if count <= 0 {
                 self.delegate?.error(AppError.noFlights)
+                return
             }
             
-            var newFlights = Set<Flight>()
-            
-            //MARK: - If we dont' have cached flights, simply pick 5 flights from the returned API's flights.
-            if cachedFlights.count == 0 {
-                for (i,flight) in self.flights.enumerated() {
-                    newFlights.insert(flight)
-                    if i == kMaxFlights-1 {
+            for i in 0..<count {
+                if i == kMaxFlights-1 {
+                    //MARK: - Clear old flights and add new ones.
+                    self.clearOldCache {
                         FlightManager.shared.saveFlights(flights: newFlights) {
                             finish()
                         }
-                        break
                     }
+                    break
                 }
-            } else { //MARK: - If we already have cached flights, pick 5 different flights returned from the API.
-                let filteredFlights = self.flights.filter { flight in
-                    !cachedFlights.contains(where: {$0.id == flight.id}
-                )}
-                
-                let count = filteredFlights.count
-                
-                if count <= 0 {
-                    self.delegate?.error(AppError.noFlights)
-                    return
+                if let flight = filteredFlights.randomElement() {
+                    newFlights.insert(flight)
                 }
-                
-                for i in 0..<count {
-                    if i == kMaxFlights-1 {
-                        //MARK: - Clear old flights and add new ones.
-                        self.clearOldCache {
-                            FlightManager.shared.saveFlights(flights: newFlights) {
-                                finish()
-                            }
-                        }
-                        break
+            }
+        } else { //MARK: - If we dont' have cached flights, simply pick 5 flights from the returned API's flights.
+            for (i,flight) in self.flights.enumerated() {
+                newFlights.insert(flight)
+                if i == kMaxFlights-1 {
+                    FlightManager.shared.saveFlights(flights: newFlights) {
+                        finish()
                     }
-                    if let flight = filteredFlights.randomElement() {
-                        newFlights.insert(flight)
-                    }
+                    break
                 }
             }
         }
     }
     
     private func clearOldCache(finish: @escaping () -> Void) {
-        FlightManager.shared.getCachedFlights { (cachedFlights, error) in
-            if error != nil {
-                
-            } else {
-                for cachedFlight in cachedFlights {
-                    FlightManager.shared.deleteFlight(flight: cachedFlight)
-                }
-                finish()
-            }
+        guard let cachedFlights = FlightManager.shared.getCachedFlights() else { return }
+        for n in 0..<cachedFlights.count {
+            let cachedFlight = cachedFlights[n]
+            FlightManager.shared.deleteFlight(flight: cachedFlight)
         }
+        finish()
     }
     
-    private func sortedById(_ flights: [Flight]) -> [Flight] {
+    private func sortedById(_ flights: [FlightObject]) -> [FlightObject] {
         let sortedFlights = flights.sorted(by: {
             guard let first: String = $0.id, let second: String = $1.id else {
                 self.delegate?.error(AppError.generic)
@@ -100,17 +89,16 @@ class LoadHomeDataFlowHelper {
                     if let diff = Calendar.current.dateComponents([.hour], from: date, to: Date()).hour, diff > 24 {
                         loadData()
                     } else {
-                        FlightManager.shared.getCachedFlights { (cachedFlights, error) in
-                            if error != nil {
-                                self.delegate?.error(AppError.generic)
-                                return
-                            }
+                        if let cachedFlights = FlightManager.shared.getCachedFlights() {
                             if cachedFlights.count > 0 {
                                 let sortedFlights = self.sortedById(cachedFlights)
                                 self.delegate?.didLoadData(sortedFlights)
                             } else {
                                 self.loadData()
                             }
+                        } else {
+                            self.delegate?.error(AppError.generic)
+                            return
                         }
                     }
                 }
@@ -135,10 +123,13 @@ class LoadHomeDataFlowHelper {
                 }
                 self.flights = data
                 self.cacheFlights {
-                    FlightManager.shared.getCachedFlights { (cachedFlights, error) in
+                    if let cachedFlights = FlightManager.shared.getCachedFlights() {
                         let sortedFlights = self.sortedById(cachedFlights)
                         self.delegate?.didLoadData(sortedFlights)
                         Preferences.setPrefsAppFirstLaunchedTime(value: Date())
+                    } else {
+                        self.delegate?.error(AppError.generic)
+                        return
                     }
                 }
                 break
