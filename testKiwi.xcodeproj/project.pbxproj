@@ -32,7 +32,7 @@
 		F7638AEA25BC41E600049259 /* FlightTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7638AE925BC41E600049259 /* FlightTVC.xib */; };
 		F7638AF025BC426C00049259 /* String+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638AEF25BC426C00049259 /* String+Utils.swift */; };
 		F7638AF625BC434700049259 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638AF525BC434700049259 /* Buttons.swift */; };
-		F7638B1F25BC489300049259 /* FlightCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638B1E25BC489300049259 /* FlightCacheManager.swift */; };
+		F7638B1F25BC489300049259 /* FlightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638B1E25BC489300049259 /* FlightManager.swift */; };
 		F7638B2725BC492400049259 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638B2625BC492400049259 /* CoreData.swift */; };
 		F7638B2E25BC495500049259 /* Flight.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7638B2C25BC495500049259 /* Flight.xcdatamodeld */; };
 		F7638B4B25BC940200049259 /* LoadHomeDataFlowHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7638B4A25BC940200049259 /* LoadHomeDataFlowHelper.swift */; };
@@ -91,7 +91,7 @@
 		F7638AE925BC41E600049259 /* FlightTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FlightTVC.xib; sourceTree = "<group>"; };
 		F7638AEF25BC426C00049259 /* String+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Utils.swift"; sourceTree = "<group>"; };
 		F7638AF525BC434700049259 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
-		F7638B1E25BC489300049259 /* FlightCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCacheManager.swift; sourceTree = "<group>"; };
+		F7638B1E25BC489300049259 /* FlightManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightManager.swift; sourceTree = "<group>"; };
 		F7638B2625BC492400049259 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		F7638B2D25BC495500049259 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		F7638B4A25BC940200049259 /* LoadHomeDataFlowHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadHomeDataFlowHelper.swift; sourceTree = "<group>"; };
@@ -380,7 +380,7 @@
 		F7638B1D25BC488600049259 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				F7638B1E25BC489300049259 /* FlightCacheManager.swift */,
+				F7638B1E25BC489300049259 /* FlightManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -583,7 +583,7 @@
 				F7355D4A25BC36EE001B049B /* HomeVM.swift in Sources */,
 				F7B6F0BB25BC3AA0002A21AA /* AppError.swift in Sources */,
 				F7355D5A25BC38E9001B049B /* APIClient.swift in Sources */,
-				F7638B1F25BC489300049259 /* FlightCacheManager.swift in Sources */,
+				F7638B1F25BC489300049259 /* FlightManager.swift in Sources */,
 				F7355CD425BC3218001B049B /* AppDelegate.swift in Sources */,
 				F7638AF025BC426C00049259 /* String+Utils.swift in Sources */,
 				F7355D3F25BC3659001B049B /* PrefsConstants.swift in Sources */,

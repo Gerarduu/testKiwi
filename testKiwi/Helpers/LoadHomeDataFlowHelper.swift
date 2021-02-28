@@ -17,38 +17,34 @@ class LoadHomeDataFlowHelper {
     weak var delegate: LoadHomeDataFlowHelperDelegate?
     
     var flights = [Flight]()
-    var cachedFlights = [Flight]()
-    var filteredFlights = [Flight]()
-    var previousIndex: UInt32?
     
     private func cacheFlights(finish: @escaping () -> Void) {
         
-        FlightCacheManager.shared.getCachedFlights { (flights, error) in
+        FlightManager.shared.getCachedFlights { (cachedFlights, error) in
+            
             if error != nil {
                 self.delegate?.error(AppError.noFlights)
             }
             
-            let oldFlights = flights
             var newFlights = Set<Flight>()
             
-            if self.flights.count <= 0 {
-                self.delegate?.error(AppError.noFlights)
-                return
-            }
-            
-            if oldFlights.count<=0 {
+            //MARK: - If we dont' have cached flights, simply pick 5 flights from the returned API's flights.
+            if cachedFlights.count == 0 {
                 for (i,flight) in self.flights.enumerated() {
-                    if i == kMaxFlights {
+                    newFlights.insert(flight)
+                    if i == kMaxFlights-1 {
+                        FlightManager.shared.saveFlights(flights: newFlights) {
+                            finish()
+                        }
                         break
                     }
-                    newFlights.insert(flight)
                 }
-            } else {
-                self.filteredFlights = self.flights.filter { flight in
-                    !oldFlights.contains(where: {$0.id == flight.id}
+            } else { //MARK: - If we already have cached flights, pick 5 different flights returned from the API.
+                let filteredFlights = self.flights.filter { flight in
+                    !cachedFlights.contains(where: {$0.id == flight.id}
                 )}
                 
-                let count = self.filteredFlights.count
+                let count = filteredFlights.count
                 
                 if count <= 0 {
                     self.delegate?.error(AppError.noFlights)
@@ -56,33 +52,30 @@ class LoadHomeDataFlowHelper {
                 }
                 
                 for i in 0..<count {
-                    if i == kMaxFlights {
+                    if i == kMaxFlights-1 {
+                        //MARK: - Clear old flights and add new ones.
+                        self.clearOldCache {
+                            FlightManager.shared.saveFlights(flights: newFlights) {
+                                finish()
+                            }
+                        }
                         break
                     }
-                    if let flight = self.filteredFlights.randomElement() {
+                    if let flight = filteredFlights.randomElement() {
                         newFlights.insert(flight)
                     }
                 }
-            }
-            
-            self.clearOldCache {
-                for flight in newFlights {
-                    FlightCacheManager.shared.saveFlightId(flight: flight)
-                }
-                
-                finish()
             }
         }
     }
     
     private func clearOldCache(finish: @escaping () -> Void) {
-        FlightCacheManager.shared.getCachedFlights { (flights, error) in
+        FlightManager.shared.getCachedFlights { (cachedFlights, error) in
             if error != nil {
                 
             } else {
-                let oldFlights = flights
-                for oldFlight in oldFlights {
-                    FlightCacheManager.shared.deleteFlight(flight: oldFlight)
+                for cachedFlight in cachedFlights {
+                    FlightManager.shared.deleteFlight(flight: cachedFlight)
                 }
                 finish()
             }
@@ -107,14 +100,13 @@ class LoadHomeDataFlowHelper {
                     if let diff = Calendar.current.dateComponents([.hour], from: date, to: Date()).hour, diff > 24 {
                         loadData()
                     } else {
-                        FlightCacheManager.shared.getCachedFlights { (flights, error) in
+                        FlightManager.shared.getCachedFlights { (cachedFlights, error) in
                             if error != nil {
                                 self.delegate?.error(AppError.generic)
                                 return
                             }
-                            self.cachedFlights = flights
-                            if self.cachedFlights.count > 0 {
-                                let sortedFlights = self.sortedById(self.cachedFlights)
+                            if cachedFlights.count > 0 {
+                                let sortedFlights = self.sortedById(cachedFlights)
                                 self.delegate?.didLoadData(sortedFlights)
                             } else {
                                 self.loadData()
@@ -123,7 +115,6 @@ class LoadHomeDataFlowHelper {
                     }
                 }
             } else {
-                
                 Preferences.setPrefsHasAlreadyLaunched(value: true)
                 loadData()
             }
@@ -144,9 +135,8 @@ class LoadHomeDataFlowHelper {
                 }
                 self.flights = data
                 self.cacheFlights {
-                    FlightCacheManager.shared.getCachedFlights { (flights, error) in
-                        self.cachedFlights = flights
-                        let sortedFlights = self.sortedById(self.cachedFlights)
+                    FlightManager.shared.getCachedFlights { (cachedFlights, error) in
+                        let sortedFlights = self.sortedById(cachedFlights)
                         self.delegate?.didLoadData(sortedFlights)
                         Preferences.setPrefsAppFirstLaunchedTime(value: Date())
                     }
